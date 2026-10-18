@@ -183,10 +183,7 @@ export function analyzeWord(raw: string, mode: DiMode): Word {
         if (mode === 'dierese') want = true
         else if (mode === 'synerese') want = false
         else {
-          const p2 = pre.slice(-2)
-          const lastTwo = pre.slice(-3).endsWith('ch') || pre.endsWith('ph') || pre.endsWith('th') ? pre.slice(-2) : pre.slice(-1)
-          const cluster = (OBS.has(lastTwo) && false) || (/[lr]$/.test(pre) && OBS.has(pre.slice(-3, -1)) && /[bcdfgptv]|ch|ph|th/.test(pre.slice(-2, -1)))
-          void p2
+          const cluster = (/[lr]$/.test(pre) && OBS.has(pre.slice(-3, -1)) && /[bcdfgptv]|ch|ph|th/.test(pre.slice(-2, -1)))
           const lex = /(orient|client|patient)/.test(norm(raw)) && u1.l === 'i'
           want =
             u1.l === 'u' ||
@@ -267,7 +264,6 @@ export function analyzeVerse(text: string, mode: DiMode, overrides: Record<numbe
           s.counted = !vowel
           s.reason = vowel ? 'élision devant voyelle ou h muet : non compté' : 'e muet devant consonne (ou h aspiré) : compté'
         }
-        const label = s.text.trim()
         notes.push(`« ${w.raw} » : ${s.counted ? 'le e muet compte pour une syllabe' : 'le e muet ne compte pas'} — ${s.reason.split(' : ')[0]}.`)
       }
       if (s.counted) total++

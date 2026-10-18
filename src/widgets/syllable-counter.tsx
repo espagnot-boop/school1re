@@ -123,8 +123,6 @@ export default function SyllableCounter({ verse }: Props) {
                 <div key={wi} className="flex flex-col items-start">
                   <div className="flex items-start">
                     {syl.map(({ s, n }, si) => {
-                      const afterCesure = false
-                      void afterCesure
                       return (
                         <Fragment key={si}>
                           <div className="flex flex-col items-center" title={s.reason || (s.dier ? 'diérèse' : undefined)}>
@@ -145,7 +143,7 @@ export default function SyllableCounter({ verse }: Props) {
                             </div>
                           </div>
                           {v.cesure !== null && n === v.cesure && (
-                            <CesureMark nextUncounted={syl.slice(si + 1)} />
+                            <CesureMark />
                           )}
                         </Fragment>
                       )
@@ -192,8 +190,7 @@ export default function SyllableCounter({ verse }: Props) {
   )
 }
 
-function CesureMark({ nextUncounted }: { nextUncounted: { s: { counted: boolean }; n: number }[] }) {
-  void nextUncounted
+function CesureMark() {
   return (
     <div className="relative mx-1.5 flex w-0 flex-col items-center self-stretch" aria-label="césure">
       <span className="absolute -top-4 whitespace-nowrap text-[9px] font-semibold uppercase tracking-widest" style={{ color: PALETTE.red }}>
