@@ -109,7 +109,7 @@ const chapter: Chapter = {
         ['Famous institutions', 'Oxford, Cambridge, Imperial College, LSE', 'Harvard, Yale, MIT, Stanford, Berkeley'],
         ['Funding', 'Tuition fees capped in England (about £9,250 a year since 2017), student loans', 'Very high fees at private universities; large endowments; scholarships'],
         ['Selection', 'UCAS system; offers based on exam results and interviews', 'SAT/ACT (now often optional), essays, extracurriculars'],
-        ['Debate', 'Access for state-school pupils; student debt', 'Student debt (over $1.5 trillion); affirmative action'],
+        ['Debate', 'Access for state-school pupils; student debt', 'Student debt (over \\$1.5 trillion); affirmative action'],
       ],
       caption: 'Higher education: two models',
     },
@@ -189,7 +189,7 @@ const chapter: Chapter = {
       items: [
         { key: 'start-up', value: 'a young company with an innovative idea and a strong growth potential' },
         { key: 'venture capitalist', value: 'an investor who finances start-ups in exchange for equity' },
-        { key: 'unicorn', value: 'a start-up valued at more than $1 billion' },
+        { key: 'unicorn', value: 'a start-up valued at more than \\$1 billion' },
         { key: 'incubator', value: 'a structure that helps young companies at an early stage' },
         { key: 'to disrupt', value: 'to change an industry radically with a new product or model' },
       ],
@@ -570,7 +570,7 @@ const chapter: Chapter = {
       type: 'qcm',
       questions: [
         { question: 'Which university is NOT in the Ivy League?', choices: ['Harvard', 'Yale', 'Stanford', 'Princeton'], answer: 2, explanation: 'Stanford is a private university in California but not part of the Ivy League.' },
-        { question: 'A “unicorn” is…', choices: ['a failed start-up', 'a start-up valued over $1 billion', 'a research grant', 'a type of patent'], answer: 1 },
+        { question: 'A “unicorn” is…', choices: ['a failed start-up', 'a start-up valued over \\$1 billion', 'a research grant', 'a type of patent'], answer: 1 },
         { question: 'What does GDPR protect?', choices: ['Inventions', 'Personal data', 'Copyright of films', 'Carbon emissions'], answer: 1 },
         { question: 'In 1997, Deep Blue beat…', choices: ['Lee Sedol', 'Garry Kasparov', 'Alan Turing', 'Bill Gates'], answer: 1 },
         { question: 'Which is a “false friend”?', choices: ['a patent', 'a lecture', 'a campus', 'a scholarship'], answer: 1, explanation: 'A lecture = un cours magistral, not une lecture.' },

@@ -1053,7 +1053,7 @@ print(balayage(0, 6, 0.01))`,
     {
       type: 'cloze',
       title: 'Compléter le raisonnement',
-      text: r`Soit $f(x) = x^3 - 6x^2 + 9x$. On a $f'(x) = 3x^2 - 12x + 9 = 3(x - {{1}})(x - {{3}})$. Le trinôme est positif à l'{{extérieur}} des racines. Donc $f$ est {{croissante}} sur $[3 ; +\infty[$, et admet un maximum local égal à $f(1) = {{4}}$ et un minimum local égal à $f(3) = {{0}}$.`,
+      text: r`Soit $f(x) = x^3 - 6x^2 + 9x$. On a $f'(x) = 3x^2 - 12x + 9 = 3(x - a)(x - b)$ avec $a =$ {{1}} et $b =$ {{3}} ($a < b$). Le trinôme est positif à l'{{extérieur}} des racines. Donc $f$ est {{croissante}} sur $[3 ; +\infty[$, et admet un maximum local égal à {{4}} (atteint en $x = 1$) et un minimum local égal à {{0}} (atteint en $x = 3$).`,
     },
   ],
 }
