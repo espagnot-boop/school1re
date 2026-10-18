@@ -255,8 +255,8 @@ export function toFn(n: Node): Fn {
 export function texNum(v: number, digits = 3): string {
   if (!Number.isFinite(v)) return v > 0 ? '+\\infty' : v < 0 ? '-\\infty' : '\\text{—}'
   return fmt(v, digits)
-    .replace(/[  \s]/g, '\\,')
     .replace(/,/g, '{,}')
+    .replace(/[\u202f\u00a0\s]/g, '\\,')
     .replace(/−/g, '-')
 }
 

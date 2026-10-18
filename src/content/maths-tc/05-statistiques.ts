@@ -713,7 +713,7 @@ print(indicateurs([11, 12, 12, 13]))`,
       solution: [
         { type: 'p', text: r`**1.** Elle renvoie le couple (moyenne, écart type) de la liste : « ecarts » accumule les carrés des écarts à la moyenne, qu’on divise par $n$ pour obtenir la variance, puis on prend la racine carrée.` },
         { type: 'p', text: r`**2.** Moyenne $= \dfrac{11+12+12+13}{4} = 12$. Carrés des écarts : $1 + 0 + 0 + 1 = 2$. Variance $= \dfrac{2}{4} = 0{,}5$ ; écart type $= \sqrt{0{,}5} \approx 0{,}71$. La fonction renvoie (12.0, 0.7071…).` },
-        { type: 'p', text: r`**3.** La première série a un écart type de 2,9 ; la seconde de 0,71 : elle est beaucoup plus concentrée autour de sa moyenne (qui est de 12 dans les deux cas pour la médiane, et 12,7 contre 12 pour la moyenne).` },
+        { type: 'p', text: r`**3.** La première série a un écart type de 2,9 ; la seconde de 0,71 : la seconde série est donc beaucoup plus concentrée autour de sa moyenne. (Les deux séries ont la même médiane, 12 ; leurs moyennes sont 12,7 et 12.)` },
       ],
     },
   ],
