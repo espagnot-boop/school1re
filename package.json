@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate": "sh scripts/run-validate.sh"
   },
   "dependencies": {
     "clsx": "2.1.1",

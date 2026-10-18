@@ -160,7 +160,8 @@ const PY_PREC = (n: BNode) => (n.k === 'bin' ? (n.op === 'nand' || n.op === 'nor
 export function toPython(n: BNode): string {
   const wrap = (c: BNode, min: number) => {
     const s = toPython(c)
-    return PY_PREC(c) < min ? `(${s})` : s
+    // on conserve aussi les parenthèses écrites par l'élève (plus lisible)
+    return PY_PREC(c) < min || (c as { paren?: boolean }).paren ? `(${s})` : s
   }
   switch (n.k) {
     case 'var':
@@ -186,7 +187,8 @@ export function toPython(n: BNode): string {
 
 /** Écriture algébrique LaTeX : A·B, A + B, A ⊕ B, barre pour la négation */
 export function toTex(n: BNode): string {
-  const prec = (c: BNode) => (c.k === 'bin' ? (c.op === 'nand' || c.op === 'nor' ? 5 : PREC[c.op]) : 5)
+  // ⊕ est toujours parenthésé à l'intérieur d'un + ou d'un · (pas de convention de priorité)
+  const prec = (c: BNode) => (c.k === 'bin' ? (c.op === 'nand' || c.op === 'nor' ? 5 : c.op === 'xor' ? 0.5 : PREC[c.op]) : 5)
   const wrap = (c: BNode, min: number) => {
     const s = toTex(c)
     return prec(c) < min ? `(${s})` : s

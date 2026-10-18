@@ -3,11 +3,14 @@ import 'katex/dist/katex.min.css'
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
+/** « · » (U+00B7) casse KaTeX dans \text{} : on le remplace par « ⋅ » (U+22C5), valide partout. */
+export const normalizeTex = (tex: string) => tex.replace(/\u00B7/g, '\u22C5')
+
 /** Rendu LaTeX via KaTeX. <Tex>{'\\frac{a}{b}'}</Tex> ou <Tex display>…</Tex> */
 export const Tex = memo(function Tex({ children, display = false, className }: { children: string; display?: boolean; className?: string }) {
   const html = useMemo(() => {
     try {
-      return katex.renderToString(children, { displayMode: display, throwOnError: false, strict: 'ignore', trust: false })
+      return katex.renderToString(normalizeTex(children), { displayMode: display, throwOnError: false, strict: 'ignore', trust: false })
     } catch {
       return children
     }

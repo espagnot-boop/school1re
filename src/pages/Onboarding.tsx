@@ -67,7 +67,7 @@ export default function Onboarding() {
                       key={s.id}
                       onClick={() => toggle(s.id)}
                       disabled={disabled}
-                      className={cn('relative flex items-start gap-3 bg-card p-4 text-left transition-colors', on ? 'bg-accent' : 'hover:bg-accent/50', disabled && 'opacity-40')}
+                      className={cn('relative flex items-start gap-3 bg-card p-4 text-left transition-colors', on ? 'bg-accent shadow-[inset_0_0_0_2px_hsl(var(--foreground))]' : 'hover:bg-accent/50', disabled && 'opacity-40')}
                     >
                       <span className="flex size-10 shrink-0 items-center justify-center border bg-background" style={{ color: `hsl(${s.hue} 70% 50%)` }}>
                         <DynamicIcon name={s.icon} className="size-5" />

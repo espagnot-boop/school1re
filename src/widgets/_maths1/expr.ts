@@ -430,3 +430,180 @@ function niceCeil(v: number) {
   const u = niceUnit(Math.abs(v) || 1) * 5
   return Math.ceil(v / u) * u
 }
+
+/* ------------------------------------------------------------------ */
+/* Dérivation symbolique + simplification                              */
+/* ------------------------------------------------------------------ */
+
+const N = (v: number): Node => ({ t: 'num', v })
+const B = (op: '+' | '-' | '*' | '/' | '^', a: Node, b: Node): Node => ({ t: 'bin', op, a, b })
+const C = (fn: string, a: Node): Node => ({ t: 'call', fn, a })
+
+function hasVar(n: Node, v: string): boolean {
+  return usedVars(n).has(v)
+}
+const isNum = (n: Node, v?: number): boolean => n.t === 'num' && (v === undefined || Math.abs(n.v - v) < 1e-12)
+
+export function simplify(n: Node): Node {
+  switch (n.t) {
+    case 'num':
+    case 'var':
+    case 'const':
+      return n
+    case 'neg': {
+      const a = simplify(n.a)
+      if (a.t === 'num') return N(-a.v)
+      if (a.t === 'neg') return a.a
+      if (a.t === 'bin' && a.op === '*' && a.a.t === 'num') return simplify(B('*', N(-a.a.v), a.b))
+      return { t: 'neg', a }
+    }
+    case 'call': {
+      const a = simplify(n.a)
+      if (a.t === 'num' && n.fn !== 'floor') {
+        const v = MATH[n.fn](a.v)
+        if (Number.isInteger(v)) return N(v)
+      }
+      return C(n.fn, a)
+    }
+    case 'bin': {
+      const a = simplify(n.a)
+      const b = simplify(n.b)
+      if (a.t === 'num' && b.t === 'num') {
+        const v = toFn(B(n.op, a, b))({})
+        if (n.op !== '/' || Number.isInteger(v)) return N(v)
+      }
+      switch (n.op) {
+        case '+':
+          if (isNum(a, 0)) return b
+          if (isNum(b, 0)) return a
+          if (b.t === 'num' && b.v < 0) return B('-', a, N(-b.v))
+          if (b.t === 'neg') return B('-', a, b.a)
+          if (b.t === 'bin' && b.op === '*' && b.a.t === 'num' && b.a.v < 0) return B('-', a, simplify(B('*', N(-b.a.v), b.b)))
+          if (a.t === 'neg') return simplify(B('-', b, a.a))
+          return B('+', a, b)
+        case '-':
+          if (isNum(b, 0)) return a
+          if (isNum(a, 0)) return simplify({ t: 'neg', a: b })
+          if (b.t === 'num' && b.v < 0) return B('+', a, N(-b.v))
+          if (b.t === 'neg') return B('+', a, b.a)
+          if (b.t === 'bin' && b.op === '*' && b.a.t === 'num' && b.a.v < 0) return B('+', a, simplify(B('*', N(-b.a.v), b.b)))
+          return B('-', a, b)
+        case '*': {
+          if (isNum(a, 0) || isNum(b, 0)) return N(0)
+          if (isNum(a, 1)) return b
+          if (isNum(b, 1)) return a
+          if (isNum(a, -1)) return simplify({ t: 'neg', a: b })
+          if (isNum(b, -1)) return simplify({ t: 'neg', a })
+          if (b.t === 'num') return simplify(B('*', b, a))
+          if (a.t === 'neg') return simplify({ t: 'neg', a: B('*', a.a, b) })
+          if (b.t === 'neg') return simplify({ t: 'neg', a: B('*', a, b.a) })
+          if (a.t === 'num' && b.t === 'bin' && b.op === '*' && b.a.t === 'num') return simplify(B('*', N(a.v * b.a.v), b.b))
+          if (a.t === 'num' && b.t === 'bin' && b.op === '/' && b.a.t === 'num') return simplify(B('/', N(a.v * b.a.v), b.b))
+          if (a.t === 'bin' && a.op === '*' && a.a.t === 'num') return simplify(B('*', a.a, B('*', a.b, b)))
+          if (b.t === 'bin' && b.op === '*' && b.a.t === 'num') return simplify(B('*', b.a, B('*', a, b.b)))
+          if (a.t === 'bin' && a.op === '/' && isNum(a.a, 1)) return simplify(B('/', b, a.b))
+          if (b.t === 'bin' && b.op === '/' && isNum(b.a, 1)) return simplify(B('/', a, b.b))
+          // x * x -> x^2 ; facteur littéral simple placé en tête : e^{kx}·k -> k·e^{kx}
+          if (a.t === 'var' && b.t === 'var' && a.name === b.name) return B('^', a, N(2))
+          if (b.t === 'var' && a.t !== 'var' && a.t !== 'num') return B('*', b, a)
+          return B('*', a, b)
+        }
+        case '/':
+          if (isNum(a, 0)) return N(0)
+          if (isNum(b, 1)) return a
+          if (a.t === 'neg') return simplify({ t: 'neg', a: B('/', a.a, b) })
+          if (a.t === 'num' && a.v < 0) return simplify({ t: 'neg', a: B('/', N(-a.v), b) })
+          if (a.t === 'num' && b.t === 'bin' && b.op === '*' && b.a.t === 'num') {
+            const k = a.v / b.a.v
+            if (Number.isInteger(k)) return simplify(B('/', N(k), b.b))
+          }
+          if (b.t === 'var' && a.t === 'bin' && a.op === '^' && a.a.t === 'var' && a.a.name === b.name && a.b.t === 'num') return simplify(B('^', b, N(a.b.v - 1)))
+          if (b.t === 'num' && a.t === 'bin' && a.op === '*' && a.a.t === 'num') {
+            const k = a.a.v / b.v
+            if (Number.isInteger(k * 1000)) return simplify(B('*', N(k), a.b))
+          }
+          return B('/', a, b)
+        case '^':
+          if (isNum(b, 0)) return N(1)
+          if (isNum(b, 1)) return a
+          if (isNum(a, 1)) return N(1)
+          if (a.t === 'bin' && a.op === '^' && a.b.t === 'num' && b.t === 'num') return B('^', a.a, N(a.b.v * b.v))
+          return B('^', a, b)
+      }
+    }
+  }
+}
+
+/** Dérivée symbolique par rapport à v (par défaut x). */
+export function diff(n: Node, v = 'x'): Node {
+  const d = (m: Node): Node => {
+    if (!hasVar(m, v)) return N(0)
+    switch (m.t) {
+      case 'num':
+      case 'const':
+        return N(0)
+      case 'var':
+        return N(m.name === v ? 1 : 0)
+      case 'neg':
+        return { t: 'neg', a: d(m.a) }
+      case 'bin': {
+        const { a, b } = m
+        switch (m.op) {
+          case '+':
+          case '-':
+            return B(m.op, d(a), d(b))
+          case '*':
+            if (!hasVar(a, v)) return B('*', a, d(b))
+            if (!hasVar(b, v)) return B('*', b, d(a))
+            return B('+', B('*', d(a), b), B('*', a, d(b)))
+          case '/':
+            if (!hasVar(b, v)) return B('/', d(a), b)
+            if (!hasVar(a, v)) return { t: 'neg', a: B('/', B('*', a, d(b)), B('^', b, N(2))) }
+            return B('/', B('-', B('*', d(a), b), B('*', a, d(b))), B('^', b, N(2)))
+          case '^':
+            if (!hasVar(b, v)) {
+              const nb = simplify(b)
+              return B('*', B('*', nb, B('^', a, simplify(B('-', nb, N(1))))), d(a))
+            }
+            if (a.t === 'const' && a.name === 'e') return B('*', m, d(b))
+            if (!hasVar(a, v)) return B('*', B('*', m, C('ln', a)), d(b))
+            return B('*', m, d(B('*', b, C('ln', a))))
+        }
+        break
+      }
+      case 'call': {
+        const a = m.a
+        const da = d(a)
+        switch (m.fn) {
+          case 'sqrt':
+            return B('/', da, B('*', N(2), C('sqrt', a)))
+          case 'sin':
+            return B('*', C('cos', a), da)
+          case 'cos':
+            return { t: 'neg', a: B('*', C('sin', a), da) }
+          case 'tan':
+            return B('/', da, B('^', C('cos', a), N(2)))
+          case 'exp':
+            return B('*', C('exp', a), da)
+          case 'ln':
+            return B('/', da, a)
+          case 'log':
+            return B('/', da, B('*', a, C('ln', N(10))))
+          case 'abs':
+            return B('/', B('*', a, da), C('abs', a))
+          default:
+            return N(0)
+        }
+      }
+    }
+    return N(0)
+  }
+  // simplifications répétées jusqu'à stabilité
+  let r = d(n)
+  for (let i = 0; i < 6; i++) {
+    const s = simplify(r)
+    if (JSON.stringify(s) === JSON.stringify(r)) break
+    r = s
+  }
+  return r
+}

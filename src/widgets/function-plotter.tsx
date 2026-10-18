@@ -8,7 +8,7 @@ import { Stat, Switch } from '@/components/ui/misc'
 import { Tex } from '@/components/Tex'
 import { Plot, FunctionPath, Line, Point, SERIES, PALETTE } from '@/lib/plot'
 import { fmt } from '@/lib/utils'
-import { compileExpr, derivative, autoYRange, toTex, usedVars, texNum } from './_maths1/expr'
+import { compileExpr, derivative, autoYRange, toTex, usedVars, texNum, diff, toFn } from './_maths1/expr'
 import { ExprField, Interpretation, PlotText, snap } from './_maths1/ui'
 
 interface ParamDef {
@@ -80,6 +80,22 @@ export default function FunctionPlotter({
     [compiled, vals],
   )
 
+  const dNodes = useMemo(() => compiled.map((c) => (c.ok ? diff(c.node) : null)), [compiled])
+  const dfns = useMemo(
+    () =>
+      dNodes.map((n, i) => {
+        if (!n) return null
+        const g = toFn(n)
+        const f = fns[i]!
+        // dérivée symbolique ; repli numérique si la formule n'est pas évaluable
+        return (x: number) => {
+          const v = g({ ...vals, x })
+          return Number.isFinite(v) ? v : Number.isFinite(f(x)) ? derivative(f, x) : NaN
+        }
+      }),
+    [dNodes, fns, vals],
+  )
+
   const initialView = useMemo<View>(() => {
     const xMin = pxMin ?? -5
     const xMax = pxMax ?? (pxMin !== undefined ? pxMin + 10 : 5)
@@ -129,7 +145,7 @@ export default function FunctionPlotter({
   const removeExpr = (i: number) => setExprs((es) => es.filter((_, j) => j !== i))
 
   const values = fns.map((f) => (f ? f(cursor) : NaN))
-  const slopes = fns.map((f) => (f ? derivative(f, cursor) : NaN))
+  const slopes = dfns.map((d) => (d ? d(cursor) : NaN))
   const valid = fns.map((f, i) => !!f && exprs[i].trim() !== '')
 
   const texLabel = (i: number) => {
@@ -273,7 +289,7 @@ export default function FunctionPlotter({
         {fns.map((f, i) =>
           f && valid[i] ? (
             <g key={i}>
-              {deriv && <FunctionPath f={(x) => derivative(f, x)} color={SERIES[i % SERIES.length]} width={1.5} dashed />}
+              {deriv && dfns[i] && <FunctionPath f={dfns[i]!} color={SERIES[i % SERIES.length]} width={1.5} dashed />}
               <FunctionPath f={f} color={SERIES[i % SERIES.length]} width={2.25} />
             </g>
           ) : null,
@@ -365,8 +381,20 @@ export default function FunctionPlotter({
           </table>
         </div>
         {deriv && (
+          <div className="mt-2 flex flex-col gap-1 overflow-x-auto text-sm">
+            {dNodes.map((n, i) =>
+              n && valid[i] ? (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="size-2 shrink-0" style={{ background: SERIES[i % SERIES.length] }} />
+                  <Tex>{`${NAMES[i]}'(x) = ${toTex(n)}`}</Tex>
+                </div>
+              ) : null,
+            )}
+          </div>
+        )}
+        {deriv && (
           <p className="mt-2 text-xs text-muted-foreground">
-            Les courbes en pointillés représentent les dérivées <Tex>{"f'"}</Tex> (calcul numérique) : là où <Tex>{"f'(x) > 0"}</Tex>, la fonction est croissante ; là où{' '}
+            Les courbes en pointillés représentent les dérivées <Tex>{"f'"}</Tex> : là où <Tex>{"f'(x) > 0"}</Tex>, la fonction est croissante ; là où{' '}
             <Tex>{"f'(x) = 0"}</Tex>, la tangente est horizontale. En <Tex>{`x_0 = ${texNum(cursor, 3)}`}</Tex>, le point de la dérivée a pour ordonnée la pente de la tangente.
           </p>
         )}

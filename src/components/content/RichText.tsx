@@ -49,7 +49,9 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
     if (p.startsWith('==') && p.endsWith('==') && p.length > 4) return <mark key={k} className="bg-yellow-300/40 px-0.5 text-inherit dark:bg-yellow-400/25">{p.slice(2, -2)}</mark>
     if (p.startsWith('`') && p.endsWith('`') && p.length > 2) return <code key={k} className="border bg-muted px-1 py-0.5 font-mono text-[0.85em]">{p.slice(1, -1)}</code>
     if (p.startsWith('*') && p.endsWith('*') && p.length > 2) return <em key={k}>{p.slice(1, -1)}</em>
-    return <Fragment key={k}>{p}</Fragment>
+    // Hors maths et hors code, un « \n » littéral (String.raw) vaut un retour à la ligne
+    const lines = p.split('\\n')
+    return <Fragment key={k}>{lines.map((l, j) => (j ? [<br key={j} />, l] : l))}</Fragment>
   })
 }
 
