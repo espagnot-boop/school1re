@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/misc'
 import { Badge } from '@/components/ui/badge'
 import { chaptersOf } from '@/content'
 import { subjectById } from '@/content/subjects'
-import type { Chapter } from '@/content/types'
+import type { ChapterMeta } from '@/content'
 import { useProgress } from '@/hooks/useProfile'
 
 export default function SubjectPage() {
@@ -16,7 +16,7 @@ export default function SubjectPage() {
   const chs = chaptersOf(s.id)
   const mastered = chs.filter((c) => progress.mastered[`${s.id}/${c.id}`]).length
 
-  const groups: { theme: string; list: Chapter[] }[] = []
+  const groups: { theme: string; list: ChapterMeta[] }[] = []
   for (const c of chs) {
     const t = c.theme ?? 'Chapitres'
     const g = groups.find((x) => x.theme === t)
@@ -79,10 +79,10 @@ export default function SubjectPage() {
                           <FileText className="size-3" /> fiche + cours
                         </span>
                         <span className="flex items-center gap-1">
-                          <PenLine className="size-3" /> {c.exercices?.length ?? 0} exercices
+                          <PenLine className="size-3" /> {c.nExercices} exercices
                         </span>
                         <span className="flex items-center gap-1">
-                          <MousePointerClick className="size-3" /> {c.representations?.length ?? 0} représentations
+                          <MousePointerClick className="size-3" /> {c.nRepresentations} représentations
                         </span>
                         {c.duration && (
                           <span className="flex items-center gap-1">

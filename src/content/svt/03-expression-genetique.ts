@@ -803,7 +803,7 @@ const chapter: Chapter = {
     {
       type: 'widget',
       id: 'dna-transcription',
-      props: { dna: 'TACGGTCAAACCGAGATT' },
+      props: { dna: 'ATGCCAGTTTGGCTCTAA' },
       title: 'De l’ADN à la protéine',
       caption: 'Observez la transcription en ARNm, le découpage en codons et la traduction. Modifiez la séquence pour tester le code génétique.',
     },

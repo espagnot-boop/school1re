@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { BlockRenderer, headingId } from '@/components/content/BlockRenderer'
 import { RichText, plain } from '@/components/content/RichText'
 import { DynamicIcon } from '@/components/SubjectIcon'
-import { chaptersOf, getChapter } from '@/content'
+import { chaptersOf, getChapter, useChapter } from '@/content'
 import { subjectById } from '@/content/subjects'
 import type { Block, Exercise } from '@/content/types'
 import { useProgress } from '@/hooks/useProfile'
@@ -121,7 +121,8 @@ export default function ChapterPage() {
   const { subject = '', chapter = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const s = subjectById(subject)
-  const ch = getChapter(subject, chapter)
+  const meta = getChapter(subject, chapter)
+  const { chapter: ch, error } = useChapter(meta)
   const { progress, markSeen, toggleMastered, toggleFavorite } = useProgress()
   const [diff, setDiff] = useState<'all' | '1' | '2' | '3'>('all')
   const key = `${subject}/${chapter}`
@@ -129,14 +130,30 @@ export default function ChapterPage() {
   const tab: Tab = tabParam && TABS.includes(tabParam) ? tabParam : 'fiche'
 
   useEffect(() => {
-    if (ch) markSeen(key)
+    if (meta) markSeen(key)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, !!ch])
+  }, [key, !!meta])
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [tab])
 
-  if (!s || !ch) return <Navigate to={s ? `/app/matiere/${subject}` : '/app'} replace />
+  if (!s || !meta) return <Navigate to={s ? `/app/matiere/${subject}` : '/app'} replace />
+  if (!ch)
+    return (
+      <div className="container max-w-6xl py-8">
+        <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{meta.theme}</div>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{plain(meta.title)}</h1>
+        {error ? (
+          <p className="mt-6 text-sm text-destructive">Impossible de charger ce chapitre. Vérifie ta connexion puis recharge la page.</p>
+        ) : (
+          <div className="mt-8 grid max-w-3xl gap-3">
+            {[80, 95, 60, 90, 70].map((w, i) => (
+              <div key={i} className="h-4 animate-pulse bg-muted" style={{ width: `${w}%` }} />
+            ))}
+          </div>
+        )}
+      </div>
+    )
 
   const list = chaptersOf(subject)
   const idx = list.findIndex((c) => c.id === ch.id)

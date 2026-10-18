@@ -19,8 +19,8 @@ import { useNavigate } from 'react-router-dom'
 function useStats() {
   return useMemo(() => {
     const chs = allChapters()
-    const exercices = chs.reduce((n, c) => n + (c.exercices?.length ?? 0), 0)
-    const interactifs = chs.reduce((n, c) => n + (c.representations?.length ?? 0), 0)
+    const exercices = chs.reduce((n, c) => n + (c.nExercices), 0)
+    const interactifs = chs.reduce((n, c) => n + (c.nRepresentations), 0)
     return { matieres: SUBJECTS.length, chapitres: chs.length, exercices, interactifs }
   }, [])
 }
