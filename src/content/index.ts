@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import index from 'virtual:chapter-index'
 import type { Chapter, SubjectId } from './types'
 import { SUBJECTS } from './subjects'
+import { withReload } from '@/lib/lazy-import'
 
 /** Métadonnées d'un chapitre, disponibles immédiatement (voir le plugin chapter-index de vite.config.ts). */
 export interface ChapterMeta {
@@ -37,7 +38,7 @@ const cache = new Map<string, Chapter>()
 export function loadChapter(meta: ChapterMeta): Promise<Chapter> {
   const hit = cache.get(meta.file)
   if (hit) return Promise.resolve(hit)
-  return loaders[meta.file]().then((m) => {
+  return withReload(loaders[meta.file])().then((m) => {
     cache.set(meta.file, m.default)
     return m.default
   })
