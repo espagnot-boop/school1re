@@ -22,8 +22,8 @@ export function texNum(x: number, digits = 2): string {
   if (Math.abs(x) < 0.5 * 10 ** -digits) x = 0
   return fmt(x, digits)
     .replace(/[−]/g, '-')
-    .replace(/[\s  ]/g, '\\,')
     .replace(',', '{,}')
+    .replace(/[\s  ]/g, '\\,')
 }
 
 /** Reconnaît une fraction p/q (q ≤ maxDen) ; renvoie [p, q] ou null. */

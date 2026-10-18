@@ -132,8 +132,8 @@ export function VecLabel({
 /** Nombre au format français pour KaTeX : 1 013,2 -> 1\,013{,}2 */
 export function texNum(x: number, digits = 2): string {
   return fmt(x, digits)
-    .replace(/[\s  ]/g, '\\,')
     .replace(',', '{,}')
+    .replace(/[\s  ]/g, '\\,')
     .replace('−', '-')
 }
 
