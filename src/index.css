@@ -97,3 +97,9 @@
 .pc-range::-moz-range-progress { height: 4px; background: hsl(var(--primary)); }
 .pc-range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5px; background: hsl(var(--background)); border: 2px solid hsl(var(--primary)); }
 .pc-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: 0; background: hsl(var(--background)); border: 2px solid hsl(var(--primary)); }
+
+@media print {
+  aside, header, nav, button, [role='tablist'] { display: none !important; }
+  .lg\:pl-64 { padding-left: 0 !important; }
+  body { background: white; color: black; }
+}
