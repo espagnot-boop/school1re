@@ -264,7 +264,7 @@ export default function ThinLens({ f: f0 = 10, objectDistance = 25, objectHeight
             <Ray pts={[B, I, atX(I, Fp, far)]} color={c1} flow={flowOn ? flow : undefined} />
             <MidArrow a={B} b={I} color={c1} />
             <MidArrow a={I} b={atX(I, Fp, Math.min(far, XR))} color={c1} />
-            {(virt || atInf) && <Ray pts={[I, virt ? atX(I, Fp, Math.max(xI - 5, -far)) : atX(I, Fp, -far)]} color={c1} dashed width={1.2} />}
+            {virt && <Ray pts={[I, atX(I, Fp, Math.max(xI - 5, -far))]} color={c1} dashed width={1.2} />}
           </g>
         )}
         {/* Rayon 2 : par le centre optique */}
