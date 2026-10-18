@@ -219,9 +219,9 @@ function stressChar(w: string): number {
 }
 
 /** Ajoute un pronom enclitique en gérant l'accent écrit : siente + se → siéntese */
-export function attach(base: string, clitic: string): string {
-  const s = stressChar(base)
-  const plain = stripAccents(base) + clitic
+export function attach(base: string, clitic: string, trim = 0): string {
+  const s = stressChar(base) // accent tonique calculé sur la forme complète (sentid, sentemos)
+  const plain = stripAccents(base).slice(0, base.length - trim) + clitic
   if (s < 0) return plain
   const natural = stressChar(plain)
   if (natural === s) return plain
@@ -390,6 +390,18 @@ function conjBase(inf: string, opts: Opts = {}): Omit<EsConj, 'reflexive' | 'bas
   }
   const sc: SC | undefined = plain ? undefined : irr.sc ?? SC_MAP[inf]
   if (sc && !isIrr) tags.push(sc === 'ie' ? 'diphtongue e → ie' : sc === 'ue' ? (inf === 'jugar' ? 'diphtongue u → ue' : 'diphtongue o → ue') : sc === 'i' ? 'affaiblissement e → i' : 'accent écrit (í / ú)')
+  if (!plain && !isIrr) {
+    if (inf.endsWith('car')) tags.push('c → qu devant e')
+    else if (inf.endsWith('guar')) tags.push('gu → gü devant e')
+    else if (inf.endsWith('gar')) tags.push('g → gu devant e')
+    else if (inf.endsWith('zar')) tags.push('z → c devant e')
+    else if (/guir$/.test(inf)) tags.push('gu → g devant a, o')
+    else if (/g(er|ir)$/.test(inf)) tags.push('g → j devant a, o')
+    else if (/[aeiou]c(er|ir)$/.test(inf) && !['mecer', 'cocer'].some((x) => inf.endsWith(x))) tags.push('c → zc devant a, o')
+    else if (/c(er|ir)$/.test(inf)) tags.push('c → z devant a, o')
+    else if (/[^gq]uir$/.test(inf)) tags.push('i → y (huyo, huyó)')
+    else if (/[aeo](er|ir|ír)$/.test(inf)) tags.push('i → y (leyó), í écrit (leíste)')
+  }
   const weakIr = group === 'ir' && (sc === 'ie' || sc === 'ue' || sc === 'i')
   if (weakIr && sc !== 'i' && !isIrr) tags.push(sc === 'ie' ? 'e → i (3e pers. passé, gérondif)' : 'o → u (3e pers. passé, gérondif)')
 
@@ -484,8 +496,8 @@ export function conjugateEs(input: string, opts: Opts = {}): EsConj | null {
       if (!f || f === '—') return f
       if (p === 1) return attach(f, 'te')
       if (p === 2 || p === 5) return attach(f, 'se')
-      if (p === 3) return attach(f.replace(/s$/, ''), 'nos') // sentemos → sentémonos
-      if (p === 4) return base === 'ir' ? 'idos' : attach(f.replace(/d$/, ''), 'os') // sentad → sentaos, vestid → vestíos
+      if (p === 3) return attach(f, 'nos', f.endsWith('s') ? 1 : 0) // sentemos → sentémonos
+      if (p === 4) return base === 'ir' ? 'idos' : attach(f, 'os', f.endsWith('d') ? 1 : 0) // sentad → sentaos, vestid → vestíos
       return f
     }),
   }
