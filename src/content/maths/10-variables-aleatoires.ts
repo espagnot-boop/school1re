@@ -796,18 +796,11 @@ def gain():
         return -4
 `),
         ol(
-          r`Expliquer pourquoi la fonction \`gain\` simule bien la variable $G$.`,
-          r`Écrire une fonction \`moyenne(n)\` qui renvoie la moyenne des gains de $n$ parties. Que doit-on observer pour $n = 100\,000$ ?`,
-          r`Écrire une fonction \`proportion(N, n)\` qui simule $N$ échantillons de taille $n$ et renvoie la proportion de ceux dont la moyenne $m$ vérifie $|m - E(G)| \le \dfrac{2\sigma}{\sqrt{n}}$. Quelle valeur approximative attend-on ?`,
-          r`Pour $n = 100$, calculer $\dfrac{2\sigma}{\sqrt{n}}$. Un joueur a fait 100 parties et a obtenu un gain moyen de $+1{,}50$ € : est-ce surprenant ?`,
-        ).items
-          ? ol(
-              'Expliquer pourquoi la fonction `gain` simule bien la variable $G$.',
-              'Écrire une fonction `moyenne(n)` qui renvoie la moyenne des gains de $n$ parties. Que doit-on observer pour $n = 100\\,000$ ?',
-              'Écrire une fonction `proportion(N, n)` qui simule $N$ échantillons de taille $n$ et renvoie la proportion de ceux dont la moyenne $m$ vérifie $|m - E(G)| \\le \\dfrac{2\\sigma}{\\sqrt{n}}$. Quelle valeur approximative attend-on ?',
-              'Pour $n = 100$, calculer $\\dfrac{2\\sigma}{\\sqrt{n}}$. Un joueur a fait 100 parties et a obtenu un gain moyen de $+1{,}50$ € : est-ce surprenant ?',
-            )
-          : p(''),
+          'Expliquer pourquoi la fonction `gain` simule bien la variable $G$.',
+          'Écrire une fonction `moyenne(n)` qui renvoie la moyenne des gains de $n$ parties. Que doit-on observer pour $n = 100\\,000$ ?',
+          'Écrire une fonction `proportion(N, n)` qui simule $N$ échantillons de taille $n$ et renvoie la proportion de ceux dont la moyenne $m$ vérifie $|m - E(G)| \\le \\dfrac{2\\sigma}{\\sqrt{n}}$. Quelle valeur approximative attend-on ?',
+          'Pour $n = 100$, calculer $\\dfrac{2\\sigma}{\\sqrt{n}}$. Un joueur a fait 100 parties et a obtenu un gain moyen de $+1{,}50$ € : est-ce surprenant ?',
+        ),
       ],
       hints: [r`\`randint(1, 10)\` donne un entier de 1 à 10, chacun avec la probabilité $\frac{1}{10}$.`.replace(/\\`/g, '`'), r`Intervalle à 95 % : $[-0{,}5 - 1{,}19 ; -0{,}5 + 1{,}19]$.`],
       solution: [

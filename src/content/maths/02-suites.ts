@@ -994,7 +994,7 @@ print(annees())   # 16`,
     {
       type: 'cloze',
       title: 'Compléter',
-      text: 'Une suite $(u_n)$ telle que $u_{n+1} = u_n + r$ est dite {{arithmétique|arithmetique}} de raison $r$ ; son terme général est $u_n = u_0 + {{nr|n×r|rn}}$. Une suite telle que $u_{n+1} = q u_n$ est dite {{géométrique|geometrique}}. Si $u_0 > 0$ et $q > 1$, elle est {{croissante}}. La somme $1 + 2 + \\cdots + 10$ vaut {{55}}.',
+      text: 'Une suite $(u_n)$ telle que $u_{n+1} = u_n + r$ est dite {{arithmétique|arithmetique}} de raison $r$ ; son terme général est $u_n = u_0 + nr$ et ses points $(n \\,;\\, u_n)$ sont {{alignés|alignes}}. Une suite telle que $u_{n+1} = q u_n$ est dite {{géométrique|geometrique}}. Si $u_0 > 0$ et $q > 1$, elle est {{croissante}}. La somme $1 + 2 + \\cdots + 10$ vaut {{55}}.',
     },
     {
       type: 'ordering',

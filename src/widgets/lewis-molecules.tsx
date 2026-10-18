@@ -306,7 +306,7 @@ export default function LewisMolecules({ molecule }: Props) {
                     {info.lpCount[i0] > 1 ? 's' : ''}
                     {a0.charge ? ' (porte la charge ⊕)' : ''} ·{' '}
                     <span className={around === (e === 'H' ? 2 : 8) ? 'text-success' : 'text-destructive'}>
-                      {around} e⁻ {e === 'H' ? '(duet)' : '(octet)'} ✓
+                      {around} e⁻ {e === 'H' ? '(duet)' : '(octet)'} {around === (e === 'H' ? 2 : 8) ? '✓' : '✗'}
                     </span>
                   </span>
                 </div>
@@ -392,14 +392,14 @@ function LewisSvg({ mol, info, showLp, showDelta }: { mol: Mol; info: ReturnType
             const t = (ang * Math.PI) / 180
             const cx0 = X(a.x) + Math.cos(t) * lpDist
             const cy0 = Y(a.y) - Math.sin(t) * lpDist
-            const px = -Math.sin(t), py = -Math.cos(t)
+            const px = Math.sin(t), py = Math.cos(t)
             return (
               <line
                 key={`${i}-${k}`}
                 x1={cx0 - (px * lpLen) / 2}
-                y1={cy0 + (py * lpLen) / 2}
+                y1={cy0 - (py * lpLen) / 2}
                 x2={cx0 + (px * lpLen) / 2}
-                y2={cy0 - (py * lpLen) / 2}
+                y2={cy0 + (py * lpLen) / 2}
                 stroke={PALETTE.violet}
                 strokeWidth={2.4}
               />

@@ -324,8 +324,10 @@ export default function LineCircleGeometry({ mode: mode0 = 'droite' }: Props) {
         <div className="text-muted-foreground">
           {circleSub === 'equation' && (
             <>
-              Mise sous forme canonique : <Tex>{`x^2 ${termTex(-2 * circ.cx, 'x', false) || '+ 0x'} = ${sq('x', circ.cx)} - ${fracTex(circ.cx ** 2, 4)}`}</Tex>{' '}
-              (de même en y).{' '}
+              Forme canonique :{' '}
+              {Math.abs(circ.cx) > 1e-12 && <><Tex>{`x^2 ${termTex(-2 * circ.cx, 'x', false)} = ${sq('x', circ.cx)} - ${fracTex(circ.cx ** 2, 4)}`}</Tex>{' '}</>}
+              {Math.abs(circ.cy) > 1e-12 && <><Tex>{`y^2 ${termTex(-2 * circ.cy, 'y', false)} = ${sq('y', circ.cy)} - ${fracTex(circ.cy ** 2, 4)}`}</Tex>{' '}</>}
+              d’où <Tex>{`${sq('x', circ.cx)} + ${sq('y', circ.cy)} = ${fracTex(circ.r2, 4)}`}</Tex>.{' '}
               {circ.kind === 'cercle'
                 ? `Le membre de droite est strictement positif : c'est un cercle.`
                 : circ.kind === 'point'

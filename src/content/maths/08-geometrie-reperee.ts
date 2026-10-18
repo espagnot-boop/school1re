@@ -1401,7 +1401,7 @@ print(cercle(2, -4, 6))             # ('vide',)
     {
       type: 'cloze',
       title: 'Compléter',
-      text: 'Pour la droite d’équation $5x-2y+1=0$, un vecteur normal est $(5;{{-2|−2}})$ et un vecteur directeur est $({{2}};5)$. Le cercle d’équation $(x-4)^2+y^2=49$ a pour centre $({{4}};0)$ et pour rayon {{7}}. La tangente à un cercle en un point A est {{perpendiculaire}} au rayon [ΩA]. La parabole $y=x^2+6x$ a pour axe de symétrie la droite $x={{-3|−3}}$.',
+      text: 'Pour la droite d’équation $5x-2y+1=0$, un vecteur normal a pour coordonnées 5 et {{-2|−2}}, et un vecteur directeur a pour coordonnées {{2}} et 5. Le cercle d’équation $(x-4)^2+y^2=49$ a pour centre le point d’abscisse {{4}} et d’ordonnée 0, et pour rayon {{7}}. La tangente à un cercle en un point A est {{perpendiculaire}} au rayon [ΩA]. La parabole $y=x^2+6x$ a pour axe de symétrie la droite d’équation x = {{-3|−3}}.',
     },
   ],
 }
