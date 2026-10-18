@@ -47,7 +47,7 @@ function energyDiagramSvg(): string {
   s += `<line x1="230" y1="${yR}" x2="330" y2="${yR}" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3"/>`
   s += arrow(320, yR, yP, GREEN)
   s += tx(326, (yR + yP) / 2 + 2, 'Eᵣ ≈ −812 kJ/mol', 12, GREEN, 'start', '700')
-  s += tx(320, 280, 'Bilan : Eᵣ ≈ Σ E(liaisons rompues) − Σ E(liaisons formées) < 0 : réaction exothermique', 11, 'currentColor')
+  s += tx(320, 280, 'Bilan : Eᵣ ≈ Σ E(liaisons rompues) − Σ E(liaisons formées) &lt; 0 : réaction exothermique', 11, 'currentColor')
   s += '</svg>'
   return s
 }
