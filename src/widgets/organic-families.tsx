@@ -282,7 +282,7 @@ function Skeletal({ mol }: { mol: Mol }) {
   const subsAt = (i: number) => {
     const list: string[] = []
     if (m === i) list.push('CH3')
-    if (family === 'alcool' && g === i && i !== 1 && !(i === n && n > 1 && false)) list.push('OH')
+    if (family === 'alcool' && g === i && i !== 1) list.push('OH')
     if (family === 'cetone' && g === i) list.push('=O')
     return list
   }
@@ -422,7 +422,7 @@ export default function OrganicFamilies({ family: f0 = 'alcool', n: n0 = 3 }: Pr
               <div className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Ramification méthyle</div>
               <div className="flex flex-wrap gap-1">
                 {[0, ...mPossible].map((p) => (
-                  <button key={p} onClick={() => setM(p)} className={cn('min-w-8 border px-1.5 py-1 font-mono text-xs', mPos === p ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-accent')}>
+                  <button key={p} onClick={() => setM(p)} className={cn('min-w-[2rem] border px-1.5 py-1 font-mono text-xs', mPos === p ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-accent')}>
                     {p === 0 ? 'aucune' : `C${p}`}
                   </button>
                 ))}

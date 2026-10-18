@@ -586,7 +586,7 @@ const chapter: Chapter = {
       variant: 'history',
       title: 'Un peu d’histoire',
       content: [
-        { type: 'p', text: r`Les astronomes grecs (Hipparque, Ptolémée) utilisaient des tables de **cordes**. Les mathématiciens indiens (Aryabhata, V^e^ siècle) introduisent la demi-corde, ancêtre du sinus ; le mot « sinus » vient d'une traduction latine d'un terme arabe. Le **radian** n'est nommé qu'en 1873 (James Thomson). Archimède (III^e^ siècle av. J.-C.) avait encadré $\pi$ entre $3 + \frac{10}{71}$ et $3 + \frac{1}{7}$ à l'aide de polygones à 96 côtés.` },
+        { type: 'p', text: r`Les astronomes grecs (Hipparque, Ptolémée) utilisaient des tables de **cordes**. Les mathématiciens indiens (Aryabhata, Vᵉ siècle) introduisent la demi-corde, ancêtre du sinus ; le mot « sinus » vient d'une traduction latine d'un terme arabe. Le **radian** n'est nommé qu'en 1873 (James Thomson). Archimède (IIIᵉ siècle av. J.-C.) avait encadré $\pi$ entre $3 + \frac{10}{71}$ et $3 + \frac{1}{7}$ à l'aide de polygones à 96 côtés.` },
       ],
     },
   ],
